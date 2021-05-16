@@ -25,12 +25,11 @@ export default function HomePage({ events }) {
 
 export async function getStaticProps() {
   //runs on build
-  const res = await fetch(`${API_URL}/api/events`);
+  const res = await fetch(`${API_URL}/events?_sort=date:ASC&_limit=3`); //?_sort=date:ASC&_limit=3 means itll get the last 3 in ascending order
   const events = await res.json();
 
   return {
-    props: { events: events.slice(0, 3) }, //return events as a prop - > passes events to our client side component as a prop
-    //first 3 events
+    props: { events }, //return events as a prop - > passes events to our client side component as a prop
     revalidate: 1,
     //have to have this incase someone updates their data,
     //as request has already happened on build and update wont be shown, this gets data again after 1 sec if data has change
