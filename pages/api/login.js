@@ -1,6 +1,7 @@
 // need this "Middleman" route so we can use a server side http only cookie
 
 import { API_URL } from "@/config/index";
+import cookie from "cookie";
 
 export default async (req, res) => {
   if (req.method === "POST") {
@@ -21,6 +22,21 @@ export default async (req, res) => {
 
     if (strapiRes.ok) {
       //set cookie
+
+      res.setHeader(
+        "Set-Cookie",
+        cookie.serialize(
+          "token", //name of cookie
+          data.jwt, //whats in cookie
+          {
+            httpOnly: true, //making it httpOnly
+            secure: process.env.NODE_ENV !== "production", //whether its https or just http
+            maxAge: 60 * 60 * 24 * 7, //will last for one week
+            sameSite: "strict",
+            path: "/", //makes it accessable everywhere around the site
+          }
+        )
+      );
       res.status(200).json({ user: data.user });
     } else {
       res
