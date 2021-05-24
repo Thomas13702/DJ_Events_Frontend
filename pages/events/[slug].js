@@ -51,20 +51,20 @@ export default function EventPage({ evt }) {
   );
 }
 
-export async function getStaticPaths() {
-  const res = await fetch(`${API_URL}/events`);
-  const events = await res.json();
+// export async function getStaticPaths() {
+//   const res = await fetch(`${API_URL}/events`);
+//   const events = await res.json();
 
-  const paths = events.map((evt) => ({
-    params: { slug: evt.slug },
-  })); //outputs array like example
+//   const paths = events.map((evt) => ({
+//     params: { slug: evt.slug },
+//   })); //outputs array like example
 
-  return {
-    paths,
-    fallback: true, //will look for path again if it wasnt generated at build time
-    //fallback: false, //shows a 404 is path not found
-  };
-}
+//   return {
+//     paths,
+//     fallback: true, //will look for path again if it wasnt generated at build time
+//     //fallback: false, //shows a 404 is path not found
+//   };
+// }
 //have to have to use getStaticProps
 //returns an array of objects with slugs example:
 // return {
@@ -75,25 +75,25 @@ export async function getStaticPaths() {
 //   ],
 // };
 
-export async function getStaticProps({ params: { slug } }) {
-  const res = await fetch(`${API_URL}/events?slug=${slug}`); //have to have ?slug=$slug to query it
-  const events = await res.json(); //return array of one event
-
-  return {
-    props: {
-      evt: events[0],
-    },
-    revalidate: 1,
-  };
-}
-
-// export async function getServerSideProps({ query: { slug } }) {
-//   const res = await fetch(`${API_URL}/api/events/${slug}`);
+// export async function getStaticProps({ params: { slug } }) {
+//   const res = await fetch(`${API_URL}/events?slug=${slug}`); //have to have ?slug=$slug to query it
 //   const events = await res.json(); //return array of one event
 
 //   return {
 //     props: {
 //       evt: events[0],
 //     },
+//     revalidate: 1,
 //   };
 // }
+
+export async function getServerSideProps({ query: { slug } }) {
+  const res = await fetch(`${API_URL}/events?slug=${slug}`);
+  const events = await res.json(); //return array of one event
+
+  return {
+    props: {
+      evt: events[0],
+    },
+  };
+}

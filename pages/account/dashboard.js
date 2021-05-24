@@ -20,7 +20,7 @@ export default function DashboardPage({ events, token }) {
       const data = await res.json();
 
       if (!res.ok) {
-        toast.error(data.essage);
+        toast.error(data.message);
       } else {
         router.reload(); //reload the dashboard page
       }
